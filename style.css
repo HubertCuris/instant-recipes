@@ -1,0 +1,59 @@
+body, html {
+    height: 100%;
+    width: 90%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFF1E6;
+    color: #333333;
+    font-family: Arial, sans-serif;
+}
+
+#app {
+    text-align: center;
+}
+
+button {
+    background-color: #FF6B6B;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+button.selected {
+    background-color: #BFD7B5;
+}
+
+button#nextButton {
+    display: block;
+    margin: 20px auto;
+    padding: 15px 30px;
+}
+
+.choices-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.choices-grid .choiceButton {
+    flex: 1 1 45%; /* Adjust based on your preference for appearance */
+    margin: 5px;
+}
+button, .choiceButton {
+    /* Existing button styles */
+    transition: background-color 0.3s;
+}
+
+button:hover, .choiceButton:hover {
+    background-color: #e65c5c; /* Lighter red for hover */
+}
+
+button.selected, .choiceButton.selected {
+    background-color: #BFD7B5; /* Different color for selected state */
+}
+
