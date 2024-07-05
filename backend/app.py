@@ -3,19 +3,14 @@ from flask_cors import CORS
 import openai
 
 app = Flask(__name__)
-cors = CORS(app, resources={
-    r"/instant-recipes": {
-        "origins": ["https://hubertcuris.github.io", "http://localhost:5000"],
-        "methods": ["GET", "HEAD", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"]
-    }
-})
+CORS(app, resources={r"/generate-recipe": {"origins": "https://hubertcuris.github.io"}})
 # Remplacez 'your_api_key_here' par votre clé API réelle
 openai.api_key = 'sk-proj-xe4K1wsEnF7piGPv9lzCT3BlbkFJStjaYWZvrmZ68KI6YUZi'
 
 # Utilisez l'ID de votre modèle GPT dédié
 model_id = "g-ki8Z1kUh3-instantrecipes"
 
-@app.route('/instant-recipes', methods=['POST'])
+@app.route('/generate-recipe', methods=['POST'])
 def generate_recipe():
     data = request.get_json()
     prompts = [
