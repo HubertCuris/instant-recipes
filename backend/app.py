@@ -1,25 +1,27 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import openai
+import openai  # Importer la bibliothèque OpenAI
+import requests
 
 app = Flask(__name__)
-CORS(app, resources={r"/generate-recipe": {"origins": "https://hubertcuris.github.io"}})
-# Remplacez 'your_api_key_here' par votre clé API réelle
-openai.api_key = 'sk-proj-xe4K1wsEnF7piGPv9lzCT3BlbkFJStjaYWZvrmZ68KI6YUZi'
 
-# Utilisez l'ID de votre modèle GPT dédié
-model_id = "g-ki8Z1kUh3-instantrecipes"
+# Configure CORS to allow requests from specific origins
+cors = CORS(app, resources={
+    r"/generate-recipe": {
+        "origins": ["https://hubertcuris.github.io", "http://localhost:5000"],
+        "methods": ["GET", "HEAD", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"]
+    }
+})
+
+# Remplacez par l'URL de votre modèle GPT personnalisé
+CUSTOM_GPT_API_URL = 'g-ki8Z1kUh3-instantrecipes'
+API_KEY = 'sk-proj-xe4K1wsEnF7piGPv9lzCT3BlbkFJStjaYWZvrmZ68KI6YUZi'
+
+# Configurer la clé API pour OpenAI
+openai.api_key = API_KEY
 
 @app.route('/generate-recipe', methods=['POST'])
 def generate_recipe():
-          [
-        ('Content-Type', 'application/json'),
-        ('Access-Control-Allow-Origin', '*'),
-        ('Access-Control-Allow-Headers', 'Authorization, Content-Type'),
-        ('Access-Control-Allow-Methods', 'POST'),
-        ]
-    return ''
-    
     data = request.get_json()
     prompts = [
         f"Do you have some time? {data['0']}",
@@ -32,23 +34,17 @@ def generate_recipe():
     
     prompt = "Generate a recipe based on the following details:\n" + "\n".join(prompts)
 
-    headers = {
-        'Authorization': f'Bearer {API_KEY}',
-        'Content-Type': 'application/json'
-    }
+    response = openai.Completion.create(
+        engine="text-davinci-003",  # Remplacez par le moteur que vous utilisez
+        prompt=prompt,
+        max_tokens=150,
+        temperature=0.7
+    )
 
-    payload = {
-        'prompt': prompt,
-        'max_tokens': 150,
-        'temperature': 0.7
-    }
-
-    response = requests.post(sk-proj-xe4K1wsEnF7piGPv9lzCT3BlbkFJStjaYWZvrmZ68KI6YUZi, headers=headers, json=payload)
-
-    if response.status_code == 200:
-        return jsonify(response.json()['choices'][0]['text'].strip())
+    if response.choices:
+        return jsonify(response.choices[0].text.strip())
     else:
-        return jsonify({"error": "Failed to generate recipe"}), response.status_code
+        return jsonify({"error": "Failed to generate recipe"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
