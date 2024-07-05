@@ -43,7 +43,7 @@ def generate_recipe():
         'temperature': 0.7
     }
 
-    response = requests.post(CUSTOM_GPT_API_URL, headers=headers, json=payload)
+    response = requests.post(sk-proj-xe4K1wsEnF7piGPv9lzCT3BlbkFJStjaYWZvrmZ68KI6YUZi, headers=headers, json=payload)
 
     if response.status_code == 200:
         return jsonify(response.json()['choices'][0]['text'].strip())
