@@ -13,7 +13,7 @@ cors = CORS(app, resources={
 })
 
 # Remplacez par l'URL de votre modèle GPT personnalisé
-CUSTOM_GPT_API_URL = 'g-ki8Z1kUh3-instantrecipes'
+CUSTOM_GPT_API_URL = 'https://chatgpt.com/g/g-ki8Z1kUh3-instantrecipes'
 API_KEY = 'sk-proj-xe4K1wsEnF7piGPv9lzCT3BlbkFJStjaYWZvrmZ68KI6YUZi'
 
 # Configurer la clé API pour OpenAI
