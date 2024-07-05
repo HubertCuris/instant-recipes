@@ -43,6 +43,7 @@ function setupStep(stepIndex) {
     if (steps[stepIndex].answerType === "input") {
         const input = document.createElement('input');
         input.placeholder = "Enter your allergies";
+        input.id = "userInput";
         app.appendChild(input);
 
         const hint = document.createElement('p');
@@ -53,26 +54,34 @@ function setupStep(stepIndex) {
             const button = document.createElement('button');
             button.textContent = option;
             button.className = 'choiceButton';
-            button.addEventListener('click', () => handleAnswer(stepIndex, option));
+            button.addEventListener('click', (event) => handleAnswer(stepIndex, option, event));
             app.appendChild(button);
         });
     }
 
-    // Add Next button if it's not the final step or it's question 6 (step index 5)
     if (stepIndex < steps.length - 1 || stepIndex === 5) {
         const nextButton = document.createElement('button');
         nextButton.textContent = 'Next';
         nextButton.id = 'nextButton';
         nextButton.addEventListener('click', () => {
+            if (stepIndex === 5) {
+                const input = document.getElementById('userInput');
+                if (input) {
+                    userData[stepIndex] = input.value;
+                }
+            }
+
             if (stepIndex === steps.length - 1) finish(); // Check if it's the last step to finish
-            else currentStep++;
-            setupStep(currentStep);
+            else {
+                currentStep++;
+                setupStep(currentStep);
+            }
         });
         app.appendChild(nextButton);
     }
 }
 
-function handleAnswer(stepIndex, answer) {
+function handleAnswer(stepIndex, answer, event) {
     if (steps[stepIndex].answerType === "single") {
         userData[stepIndex] = answer; // Save single answer
         const buttons = document.querySelectorAll('.choiceButton');
@@ -91,8 +100,27 @@ function handleAnswer(stepIndex, answer) {
     }
 }
 
-function finish() {
+async function finish() {
     console.log('All steps completed. User data:', userData);
     const app = document.getElementById('app');
-    app.innerHTML = '<p>Thanks for completing the questions. Check console for your answers.</p>';
+    app.innerHTML = '<p>Thanks for completing the questions. Generating your recipe...</p>';
+
+    try {
+        const response = await fetch('http://127.0.0.1:5000/generate-recipe', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+
+        if (response.ok) {
+            const recipe = await response.json();
+            app.innerHTML = `<h2>Your Recipe</h2><p>${recipe}</p>`;
+        } else {
+            app.innerHTML = `<p>Error: ${response.status}</p>`;
+        }
+    } catch (error) {
+        app.innerHTML = `<p>Error: ${error.message}</p>`;
+    }
 }
