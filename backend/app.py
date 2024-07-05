@@ -11,7 +11,18 @@ openai.api_key = 'sk-proj-xe4K1wsEnF7piGPv9lzCT3BlbkFJStjaYWZvrmZ68KI6YUZi'
 model_id = "g-ki8Z1kUh3-instantrecipes"
 
 @app.route('/generate-recipe', methods=['POST'])
-def generate_recipe():
+def generate_recipe(environ, start_response):
+  if environ['REQUEST_METHOD'] == 'OPTIONS':
+    start_response(
+      '200 OK',
+      [
+        ('Content-Type', 'application/json'),
+        ('Access-Control-Allow-Origin', '*'),
+        ('Access-Control-Allow-Headers', 'Authorization, Content-Type'),
+        ('Access-Control-Allow-Methods', 'POST'),
+      ]
+    )
+    return ''
     data = request.get_json()
     prompts = [
         f"Do you have some time? {data['0']}",
