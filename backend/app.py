@@ -3,8 +3,12 @@ from flask_cors import CORS
 import openai
 
 app = Flask(__name__)
-CORS(app, resources={r"/generate-recipe": {"origins": "https://hubertcuris.github.io"}})
-
+cors = CORS(app, resources={
+    r"/generate-recipe": {
+        "origins": ["https://hubertcuris.github.io", "http://localhost:5000"],
+        "methods": ["GET", "HEAD", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"]
+    }
+})
 # Remplacez 'your_api_key_here' par votre clé API réelle
 openai.api_key = 'sk-proj-xe4K1wsEnF7piGPv9lzCT3BlbkFJStjaYWZvrmZ68KI6YUZi'
 
