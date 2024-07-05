@@ -1,10 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import openai
 
 app = Flask(__name__)
-
-# CUSTOM_GPT_API_URL = 'https://api.votre-modele-gpt-personnalise.com/v1/engines/votre-modele/completions'
-# API_KEY = 'votre_cle_api_personnalisee'
+CORS(app, resources={r"/generate-recipe": {"origins": "https://hubertcuris.github.io"}})
 
 # Remplacez 'your_api_key_here' par votre clé API réelle
 openai.api_key = 'sk-proj-xe4K1wsEnF7piGPv9lzCT3BlbkFJStjaYWZvrmZ68KI6YUZi'
